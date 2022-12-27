@@ -7,7 +7,7 @@ public class Tiros
 	public static void tiros(char[][] acertos)
 	{
 		int i,j;
-		System.out.println("   1 2 3 4 5");
+		System.out.println("   1 2 3 4 5 6 7 8 9 10");
 		for(i=0; i<acertos.length; i++)
 		{
 			if((i+1)<5)

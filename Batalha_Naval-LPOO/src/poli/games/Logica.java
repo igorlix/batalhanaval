@@ -13,7 +13,7 @@ public class Logica
 		entrada = new Scanner(System.in);
 		boolean sair = false;
 		char [][] tabuleiro = Tabuleiro.tab();
-		char[][] acertos = new char[5][5];
+		char[][] acertos = new char[10][10];
         int vezes =0;
         Tabuleiro.tab();
         while(sair==false)
@@ -27,7 +27,7 @@ public class Logica
         		String[] coords = tiro.split(" ");
         		int coordY = Integer.parseInt(coords[0]);
         		int coordX = Integer.parseInt(coords[1]);
-        		if(coordY > 0 && coordY < 6 && coordX > 0 && coordX < 6)
+        		if(coordY > 0 && coordY < 11 && coordX > 0 && coordX < 11)
         		{
         			if(acertos[coordY-1][coordX-1] == 0)
         			{	

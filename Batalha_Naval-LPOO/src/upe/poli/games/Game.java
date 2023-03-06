@@ -58,7 +58,7 @@ public class Game {
                 otherJogador.getFormato().getFormato()[x][y] = 2;
             }
 
-            // troca os jog adores
+            // troca os jogadores
             Jogador temp = currentJogador;
             currentJogador = otherJogador;
             otherJogador = temp;

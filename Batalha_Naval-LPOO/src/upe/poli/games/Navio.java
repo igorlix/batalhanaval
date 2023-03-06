@@ -1,5 +1,7 @@
 package upe.poli.games;
 
+import upe.poli.games.Tabuleiro;
+
 public abstract class Navio {
     private String tipo;
     private int tamanho;

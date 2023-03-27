@@ -1,15 +1,15 @@
 package upe.poli.games;
 
 public class Tabuleiro {
-    private int[][] formato;
+    private int[][] grelha;
     private int size;
 
     public Tabuleiro(int size) {
         this.size = size;
-        formato = new int[size][size];
+        grelha = new int[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                formato[i][j] = -1;
+                grelha[i][j] = 0;
             }
         }
     }
@@ -21,52 +21,42 @@ public class Tabuleiro {
         }
         System.out.println();
         for (int i = 0; i < size; i++) {
-            System.out.print(i + " ");
+            System.out.print((char) ('A' + i) + " ");
             for (int j = 0; j < size; j++) {
-                if (formato[i][j] == -1) {
-                    System.out.print(". ");
-                } else if (formato[i][j] == 0) {
-                    System.out.print("O ");
-                } else if (formato[i][j] == 1) {
-                    System.out.print("X ");
+                if (grelha[i][j] == 0) { // indica um espaco vazio (mar)
+                    System.out.print("~ "); 
+                } else if (grelha[i][j] == 1) { // indica um navio
+                    System.out.print("O "); 
+                } else if (grelha[i][j] == 2) { // indica um navio acertado
+                    System.out.print("X "); 
+                }   else if (grelha[i][j] == 3) { // indica uma posicao vazia acertada  
+                        System.out.print(". "); 
                 }
             }
             System.out.println();
         }
     }
 
-    public void setShip(int x, int y, String tipo) {
-        int size = 0;
-        if (tipo.equals("Porta-Aviões")) {
-            size = 5;
-        } else if (tipo.equals("Encouraçado")) {
-            size = 4;
-        } else if (tipo.equals("Contratorpedeiro")) {
-            size = 3;
-        } else if (tipo.equals("Submarino")) {
-            size = 2;
-        }
-        for (int i = 0; i < size; i++) {
-            formato[x][y + i] = 0;
-        }
+    public void setAcerto(int x, int y) {
+        grelha[x][y] = 2;
     }
-
-    public void setHit(int x, int y) {
-        formato[x][y] = 1;
+    public void setErro(int x, int y) {
+        grelha[x][y] = 3;
     }
+    
 
     public int getSize() {
         return size;
     }
 
-    public int[][] getFormato() {
-        return formato;
+    public int[][] getGrelha() {
+        return grelha;
     }
 
-    public boolean allShipsDestroyed() {
+    public boolean naviosDestruidos() {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                if (formato[i][j] == 0) {
+                if (grelha[i][j] == 1 ) {
                     return false;
                 }
             }

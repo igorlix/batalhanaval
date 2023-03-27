@@ -2,6 +2,8 @@ package upe.poli.games;
 
 import java.util.Scanner;
 
+import upe.poli.games.excessoes.EntradaInvalidaExcessao;
+
 public class Game {
     private Jogador[] jogadores;
 
@@ -9,59 +11,60 @@ public class Game {
         this.jogadores = jogadores;
     }
 
-    
-    //
-    public  void start() {   //Estou tendo um problema com esse metodo apos incluir diferentes tipos de navios, para pular para a parte do jogo apos a selecao de posicao das embarcacoes apague-o//
+    public  void start() throws EntradaInvalidaExcessao{ 
         Scanner scanner = new Scanner(System.in);
 
         for (Jogador jogador : jogadores) {
-            System.out.println("Jogador " + jogador.getName() + " posicione seus barcos.");
-            int size = jogador.getFormato().getSize();
-
-            for (int i = 0; i < size; i++) {
-                System.out.print("Escolha uma coordenada x seu barco " + (i + 1) + ": ");
-                int x = scanner.nextInt();
-                System.out.print("Escolha uma coordenada y seu barco " + (i + 1) + ": ");
-                int y = scanner.nextInt();
-                System.out.print("Escolha sua naçao: ");
-                String tipo = scanner.next();
-                jogador.setShip(tipo);
-            }
+            System.out.println("Jogador " + jogador.getNome() + " posicione seus barcos.");
+ 
+            jogador.posicionarNavios();
+            
         }
-        //
 
         boolean gameOver = false;
-        Jogador currentJogador = jogadores[0];
-        Jogador otherJogador = jogadores[1];
+        Jogador jogador1 = jogadores[0];
+        Jogador jogador2 = jogadores[1];
 
         while (!gameOver) {
-            System.out.println(currentJogador.getName() + " turno");
-            currentJogador.getFormato().printTabuleiro();
-
+            System.out.println("Turno de ataque de: " +jogador1.getNome());
+            System.out.println("Grelha de Defesa:");
+            jogador1.getGrelhaDeDefesa().printTabuleiro();
+            System.out.println("Grelha de Ataque:");
+            jogador1.getGrelhaDeAtaque().printTabuleiro();        
+            
             int x, y;
+            char z;
+            
             do {
-                System.out.print("Escolha uma coordenada x para acertar: ");
-                x = scanner.nextInt();
-                System.out.print("Escolha uma coordenada y para acertar: ");
+                System.out.print("Escolha uma linha: ");
+                z = scanner.next().charAt(0);
+                System.out.print("Escolha uma coluna: ");
                 y = scanner.nextInt();
-            } while (currentJogador.getFormato().getFormato()[x][y] != -1);
-
-            if (otherJogador.getFormato().getFormato()[x][y] == 0) {
-                System.out.println("Hit!");
-                otherJogador.getFormato().setHit(x, y);
-                if (otherJogador.getFormato().allShipsDestroyed()) {
-                    System.out.println(currentJogador.getName() + " Vitória!");
+                x = Character.toLowerCase(z)-(int) 'a'; // 
+                if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 2) {
+                    System.out.println("Posição já acertada, escolha uma nova posição.");
+                }
+            } while (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 2);
+          
+            if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 1) { // '1' indica um navio ja posicionado
+                System.out.println("Acertou!");
+                jogador1.getGrelhaDeAtaque().setAcerto(x,y);
+                jogador2.getGrelhaDeDefesa().setAcerto(x, y);
+                if (jogador2.getGrelhaDeDefesa().naviosDestruidos()) {
+                    System.out.println(jogador1.getNome() + " Vitória!");
                     gameOver = true;
                 }
             } else {
                 System.out.println("Errou!");
-                otherJogador.getFormato().getFormato()[x][y] = 2;
+                jogador1.getGrelhaDeAtaque().setErro(x,y);
+                jogador2.getGrelhaDeDefesa().setErro(x,y);           
             }
 
             // troca os jogadores
-            Jogador temp = currentJogador;
-            currentJogador = otherJogador;
-            otherJogador = temp;
+            Jogador atual = jogador1;
+            jogador1 = jogador2;
+            jogador2 = atual;
         }
+        
     }
 }

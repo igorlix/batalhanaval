@@ -2,7 +2,7 @@ package upe.poli.games;
 
 import java.util.Scanner;
 
-import upe.poli.games.excessoes.EntradaInvalidaExcessao;
+import upe.poli.games.excecoes.EntradaInvalidaExcecao;
 
 public class Game {
     private Jogador[] jogadores;
@@ -11,7 +11,7 @@ public class Game {
         this.jogadores = jogadores;
     }
 
-    public  void start() throws EntradaInvalidaExcessao{ 
+    public  void start() throws EntradaInvalidaExcecao{ 
         Scanner scanner = new Scanner(System.in);
 
         for (Jogador jogador : jogadores) {

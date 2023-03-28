@@ -1,7 +1,7 @@
 package upe.poli.games;
 import java.util.Scanner;
 
-import upe.poli.games.excessoes.EntradaInvalidaExcessao;
+import upe.poli.games.excessoes.EntradaInvalidaExcecao;
 import upe.poli.games.navios.Contratorpedeiro;
 import upe.poli.games.navios.Encouracado;
 import upe.poli.games.navios.PortaAvioes;
@@ -10,7 +10,7 @@ import upe.poli.games.navios.Submarino;
 
 public class Main 
 {
-    	public static void main(String[] args) throws EntradaInvalidaExcessao{
+    	public static void main(String[] args) throws EntradaInvalidaExcecao{
     		Scanner scanner = new Scanner(System.in);
     	
     		Navio[] navios = new Navio[4];
@@ -23,11 +23,11 @@ public class Main
 
             System.out.print("Insira o tamanho do tabuleiro (valor inteiro entre 5 e 10): ");
             int size = scanner.nextInt();
+			
             if (size < 5 || size > 10) {
-               throw new EntradaInvalidaExcessao();
+               throw new EntradaInvalidaExcecao();
             }
-                   
-
+			
     	    Jogador[] Jogadores = new Jogador[2];
     	    for (int i = 0; i < 2; i++) 
     	    {
@@ -43,10 +43,10 @@ public class Main
     	            
     	        //}
     	    }
-    	        
-    	   
+			
 
     	    Game game = new Game(Jogadores);
     	    game.start();
+			
     	}
 }

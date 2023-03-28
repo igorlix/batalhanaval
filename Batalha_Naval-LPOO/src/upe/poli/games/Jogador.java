@@ -2,7 +2,7 @@ package upe.poli.games;
 
 import java.util.Scanner;
 
-import upe.poli.games.excessoes.EntradaInvalidaExcessao;
+import upe.poli.games.excecoes.EntradaInvalidaExcecao;
 
 public class Jogador 
 {
@@ -37,7 +37,7 @@ public class Jogador
         return navios;
     }
 
-    public void posicionarNavios() throws EntradaInvalidaExcessao{
+    public void posicionarNavios() throws EntradaInvalidaExcecao{
         Scanner scanner = new Scanner(System.in);
         for (int i = 0; i < navios.length; i++) {
             Navio navio = navios[i];
@@ -56,21 +56,21 @@ public class Jogador
                     	x = Character.toLowerCase(z) -(int) 'a'; //Recebe char e transforma em int
                         x = x % 26; // Ignora o uso de letras Maiusculas
                     }else {
-                    	throw new EntradaInvalidaExcessao();
+                    	throw new EntradaInvalidaExcecao();
                     }
                     
                     System.out.print("Coluna: ");
                     if(scanner.hasNextInt()) {
                     	y = scanner.nextInt();
                     }else {
-                        	throw new EntradaInvalidaExcessao();
+                        	throw new EntradaInvalidaExcecao();
                           }
                     
                     System.out.print("Vertical? (true/false): ");
                     if(scanner.hasNextBoolean()) {
                     	vertical = scanner.nextBoolean();
                     }else {
-                        	throw new EntradaInvalidaExcessao();
+                        	throw new EntradaInvalidaExcecao();
                           }
                     
 

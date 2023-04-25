@@ -1,0 +1,57 @@
+package upe.poli.games;
+
+
+import upe.poli.games.GUI.TelaConfigGUI;
+import upe.poli.games.GUI.TelaDeInicio;
+import upe.poli.games.excecoes.TamanhoTabuleiroInvalidoException;
+import upe.poli.games.navios.Contratorpedeiro;
+import upe.poli.games.navios.Encouracado;
+import upe.poli.games.navios.PortaAvioes;
+import upe.poli.games.navios.Submarino;
+
+
+public class Main {
+	public static void main(String[] args) throws TamanhoTabuleiroInvalidoException {
+
+	    TelaDeInicio telaDeInicio = new TelaDeInicio();
+	    telaDeInicio.setVisible(true);
+
+	    TelaConfigGUI telaConfigGUI = new TelaConfigGUI();
+	    telaConfigGUI.setVisible(false);
+
+	    // Aguarda até que o usuário preencha as informações e clique no botão "Iniciar Jogo"
+	    while (!telaConfigGUI.iniciado()) {
+	        try {
+	            Thread.sleep(100);
+	        } catch (InterruptedException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    String nomeJogador1 = telaConfigGUI.getNome1();
+	    String nomeJogador2 = telaConfigGUI.getNome2();
+	    int tamanhoTabuleiro = telaConfigGUI.getTamanhoTabuleiro();
+	    boolean modoClassico = telaConfigGUI.isModoClassico();
+
+	    Navio[] navios = new Navio[4];
+	    navios[0] = new PortaAvioes("Porta-Aviões", 3);
+	    navios[1] = new Encouracado("Encouraçado", 4);
+	    navios[2] = new Contratorpedeiro("Contratorpedeiro", 3);
+	    navios[3] = new Submarino("Submarino", 2);
+
+	    System.out.println("Bem-vindo ao jogo Batalha Naval");
+
+	    Jogador[] jogadores = new Jogador[2];
+	    jogadores[0] = new Jogador(nomeJogador1, tamanhoTabuleiro, navios);
+	    jogadores[1] = new Jogador(nomeJogador2, tamanhoTabuleiro, navios);
+
+	    if (modoClassico) {
+	        Game game = new Game(jogadores, tamanhoTabuleiro);
+	        game.start();
+	    } else {
+	        GameCustom gameCustom = new GameCustom(jogadores);
+	        gameCustom.personalizarNavios();
+	        gameCustom.start();
+	    }
+	}
+}

@@ -1,0 +1,75 @@
+package upe.poli.games.GUI;
+
+import javax.swing.JButton;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class CoordenadasGUI extends JFrame {
+    private JTextField xField;
+    private JTextField yField;
+    private JRadioButton horizontalButton;
+    private JRadioButton verticalButton;
+    private int cordx;
+    private int cordy;
+    private boolean orientacaoVertical;
+
+    public CoordenadasGUI() {
+        setTitle("Coordenadas e orientação");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JPanel mainPanel = new JPanel(new GridLayout(4, 2));
+
+        JLabel xLabel = new JLabel("Coordenada x:");
+        xField = new JTextField();
+        JLabel yLabel = new JLabel("Coordenada y:");
+        yField = new JTextField();
+
+        mainPanel.add(xLabel);
+        mainPanel.add(xField);
+        mainPanel.add(yLabel);
+        mainPanel.add(yField);
+
+        JLabel orientacaoLabel = new JLabel("Orientação:");
+        mainPanel.add(orientacaoLabel);
+
+        ButtonGroup group = new ButtonGroup();
+        horizontalButton = new JRadioButton("Horizontal", true);
+        verticalButton = new JRadioButton("Vertical", false);
+        group.add(horizontalButton);
+        group.add(verticalButton);
+
+        mainPanel.add(horizontalButton);
+        mainPanel.add(verticalButton);
+
+        JButton confirmButton = new JButton("Confirmar");
+        confirmButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                cordx = Integer.parseInt(xField.getText());
+                cordy = Integer.parseInt(yField.getText());
+                orientacaoVertical = verticalButton.isSelected();
+                dispose();
+            }
+        });
+
+        mainPanel.add(new JPanel());
+        mainPanel.add(confirmButton);
+
+        add(mainPanel);
+        pack();
+        setVisible(true);
+    }
+
+    public int getCordX() {
+        return cordx;
+    }
+
+    public int getCordY() {
+        return cordy;
+    }
+
+    public boolean orientacaoVertical() {
+        return orientacaoVertical;
+    }
+}

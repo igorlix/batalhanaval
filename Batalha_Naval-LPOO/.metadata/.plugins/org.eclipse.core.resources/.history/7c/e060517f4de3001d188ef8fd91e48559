@@ -1,0 +1,23 @@
+package upe.poli.games;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Ranking {
+    private Map<String, Integer> vitorias = new HashMap<>();
+    private Map<String, Integer> turnos = new HashMap<>();
+
+    public Ranking(Jogador[] jogadores) {
+        for (Jogador jogador : jogadores) {
+            vitorias.put(jogador.getNome(), 0);
+            turnos.put(jogador.getNome(), 0);
+        }
+    }
+
+    public void atualizar(Jogador[] jogadores, int numTurnos) {
+        for (Jogador jogador : jogadores) {
+            vitorias.put(jogador.getNome(), jogador.getNumVitorias());
+            turnos.put(jogador.getNome(), turnos.get(jogador.getNome()) + numTurnos);
+        }
+    }
+}

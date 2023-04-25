@@ -1,0 +1,195 @@
+package upe.poli.games.GUI;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
+import upe.poli.games.Jogador;
+import upe.poli.games.Tabuleiro;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TabuleiroGUI extends JFrame {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Tabuleiro tabuleiro;
+    private JButton[][] botoes;
+	private String nome;
+	private String tipoDeTabuleiro;
+	private int cordx;
+    private int cordy;
+    private boolean orientacaoVertical;
+    private JButton botaoConfirmar;
+    private JButton botaoPosicionar;
+
+   
+
+        public TabuleiroGUI(Tabuleiro tabuleiro, String nome, String tipoDeTabuleiro) {
+            this.tabuleiro = tabuleiro;
+            this.nome = nome;
+            this.tipoDeTabuleiro = tipoDeTabuleiro;
+            this.botoes = new JButton[tabuleiro.getSize()][tabuleiro.getSize()];
+
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setTitle("Grelha de: " + tipoDeTabuleiro + " " + nome);
+
+            JPanel painelPrincipal = new JPanel(new GridLayout(tabuleiro.getSize() + 2, tabuleiro.getSize() + 1));
+
+            // Cria os botões das colunas
+            painelPrincipal.add(new JLabel(""));
+            for (int i = 0; i < tabuleiro.getSize(); i++) {
+                painelPrincipal.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
+            }
+
+            // Cria os botões das linhas e da grelha
+            for (int i = 0; i < tabuleiro.getSize(); i++) {
+                painelPrincipal.add(new JLabel(String.valueOf((char) ('A' + i)), SwingConstants.CENTER));
+                for (int j = 0; j < tabuleiro.getSize(); j++) {
+                    JButton botao = new JButton("~");
+                    botao.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JButton button = (JButton) e.getSource();
+                            for (int i = 0; i < tabuleiro.getSize(); i++) {
+                                for (int j = 0; j < tabuleiro.getSize(); j++) {
+                                    if (button == botoes[i][j]) {
+                                        cordx = i;
+                                        cordy = j;
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    });
+                    botao.setBackground(Color.BLUE);// Define o texto inicial do botão como "~"
+                    botao.setPreferredSize(new Dimension(50, 50));
+                    botoes[i][j] = botao;
+                    painelPrincipal.add(botao);
+                }
+            }
+
+            JPanel painelBotoes = new JPanel(new FlowLayout());
+          
+
+            add(painelPrincipal, BorderLayout.CENTER);
+            add(painelBotoes, BorderLayout.SOUTH);
+
+            pack();
+            setVisible(true);
+        }
+        
+	public void atualizar() {
+        int[][] grelha = tabuleiro.getGrelha();
+        for (int i = 0; i < tabuleiro.getSize(); i++) {
+            for (int j = 0; j < tabuleiro.getSize(); j++) {
+            	JButton botao = botoes[i][j];
+                if (grelha[i][j] == 0) { // indica um espaco vazio (mar)
+                    botao.setText("~");
+                    botao.setBackground(Color.BLUE);
+                } else if (grelha[i][j] == 1) { // indica um navio
+                	botao.setText("O");
+                	botao.setBackground(Color.GRAY);
+                } else if (grelha[i][j] == 2) { // indica um navio acertado
+                	botao.setText("X");
+                	botao.setBackground(Color.GREEN);
+                } else if (grelha[i][j] == 3) { // indica uma posicao vazia acertada
+                	botao.setText(".");
+                	botao.setBackground(Color.RED);
+                } else if (grelha[i][j] == 4) { // indica um porta aviões
+                	botao.setText("O");
+                	botao.setBackground(Color.DARK_GRAY); 
+                } else if (grelha[i][j] == 5) { // Encouracado
+                	botao.setText("#");
+                	botao.setBackground(new Color(192, 192, 192)); 
+                } else if (grelha[i][j] == 6) { // Contratorpedeiro
+                	botao.setText("@");
+                	botao.setBackground(new Color(192, 192, 192)); 
+                } else if (grelha[i][j] == 7) { // Submarino   
+                	botao.setText("*");
+                	botao.setBackground(new Color(220, 220, 220)); 
+                } else if (grelha[i][j] == 8) { // navio do jogador atual atacado   
+                	botao.setText("!");
+                	botao.setBackground(new Color(255, 165, 0)); 
+                } 
+            }
+        }
+    }
+	
+	 public int getCordX() {
+	        return cordx;
+	    }
+
+	    public int getCordY() {
+	        return cordy;
+	    }
+	    public boolean orientacaoVertical() {
+	    	return orientacaoVertical;
+	    }
+	    
+	    private void criarBotaoConfirmar() {
+	    	botaoConfirmar = new JButton("Confirmar");
+            botaoConfirmar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // Define a orientação do navio com base na posição selecionada anteriormente
+                    orientacaoVertical = JOptionPane.showOptionDialog(null,
+                            "Selecione a orientação do navio:",
+                            "Orientação",
+                            JOptionPane.DEFAULT_OPTION,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            null,
+                            new String[]{"Vertical", "Horizontal"},
+                            "Vertical") == 0;
+
+                    // Atualiza o botão selecionado com a orientação escolhida
+                    JButton botao = botoes[cordx][cordy];
+	            }
+	        });
+	    }
+
+	    public void exibirBotaoConfirmar() {
+	        criarBotaoConfirmar();
+	        JPanel painelConfirmar = new JPanel();
+	        painelConfirmar.add(botaoConfirmar);
+	        add(painelConfirmar, BorderLayout.SOUTH);
+	        pack();
+	        setExtendedState(JFrame.NORMAL);
+	        setVisible(true);
+	    }
+	
+	
+
+    public void setTiro(Tabuleiro tabuleiro, int x, int y, int tipo) {
+        
+        if(tipo == 1) {
+        	tabuleiro.setAcerto(x, y, 1);
+            atualizar();
+        }else if (tipo == 8) {
+            tabuleiro.setAcerto(x, y, 8);
+            atualizar();
+        } else if (tipo == 4) {
+        	tabuleiro.setAcerto(x, y, 4);
+            atualizar();
+        }else if (tipo == 5) {
+        	tabuleiro.setAcerto(x, y, 5);
+            atualizar();
+        }else if (tipo == 6) {
+        	tabuleiro.setAcerto(x, y, 6);
+            atualizar();
+        }else if (tipo == 7) {
+        	tabuleiro.setAcerto(x, y, 7);
+            atualizar();
+        }
+
+    }
+
+    public void setErrou(Tabuleiro tabuleiro, int x, int y) {
+        tabuleiro.setErro(x, y);
+        botoes[x][y].setText(".");
+        atualizar();
+    }
+
+}

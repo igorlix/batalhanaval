@@ -1,0 +1,16 @@
+package upe.poli.games.GUI;
+
+import javax.swing.JButton;
+
+//public class BotoesGUI extends JButton {
+    //private int xCoord;
+    
+    //public BotoesGUI(String text, int x) {
+       // super(text);
+       // this.xCoord = x;
+    //}
+    
+   // public int getXCoord() {
+        //return xCoord;
+   // }
+//}

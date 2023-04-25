@@ -1,0 +1,46 @@
+package upe.poli.games;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
+
+public class Ranking {
+    private Map<String, Integer> vitorias = new HashMap<>();
+    private Map<String, Integer> turnos = new HashMap<>();
+
+    public Ranking(Jogador[] jogadores) {
+        for (Jogador jogador : jogadores) {
+            vitorias.put(jogador.getNome(), 0);
+            turnos.put(jogador.getNome(), 0);
+        }
+    }
+
+    public void atualizar(Jogador[] jogadores, int numTurnos) {
+        for (Jogador jogador : jogadores) {
+            vitorias.put(jogador.getNome(), jogador.getNumVitorias());
+            turnos.put(jogador.getNome(), turnos.get(jogador.getNome()) + numTurnos);
+        }
+    }
+
+    public String exibirRanking() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Ranking:\n");
+        for (String jogador : vitorias.keySet()) {
+            sb.append(jogador).append(" - Vitórias: ").append(vitorias.get(jogador))
+                    .append(" - Total de turnos: ").append(turnos.get(jogador)).append("\n");
+        }
+        return sb.toString();
+    }
+
+    public void exibirRankingJOptionPane() {
+        JOptionPane.showMessageDialog(null, exibirRanking(), "Ranking", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public void salvarRanking(String arquivo) throws IOException {
+        FileWriter writer = new FileWriter(arquivo);
+        writer.write(exibirRanking());
+        writer.close();
+}

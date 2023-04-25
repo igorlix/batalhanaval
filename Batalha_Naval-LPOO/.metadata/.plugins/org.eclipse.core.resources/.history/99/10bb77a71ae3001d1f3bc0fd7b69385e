@@ -1,0 +1,70 @@
+package upe.poli.games.GUI;
+
+import java.awt.*;
+import javax.swing.*;
+
+public class CoordenadasGUI extends JFrame {
+    private int cordX;
+    private int cordY;
+    private boolean confirmado;
+    private JTextField cordXField;
+    private JTextField cordYField;
+    private JButton confirmarButton;
+
+    public CoordenadasGUI() {
+        super("Coordenadas");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        setLayout(new BorderLayout());
+        JPanel panel = new JPanel(new FlowLayout());
+
+        JLabel cordXLabel = new JLabel("Coordenada X:");
+        cordXField = new JTextField(2);
+        JLabel cordYLabel = new JLabel("Coordenada Y:");
+        cordYField = new JTextField(2);
+        confirmarButton = new JButton("Confirmar");
+
+        panel.add(cordXLabel);
+        panel.add(cordXField);
+        panel.add(cordYLabel);
+        panel.add(cordYField);
+        panel.add(confirmarButton);
+
+        add(panel, BorderLayout.CENTER);
+        pack();
+        setLocationRelativeTo(null);
+        setVisible(false);
+    }
+
+    public void exibir() {
+        cordXField.setText("");
+        cordYField.setText("");
+        confirmado = false;
+        setVisible(true);
+
+        while (!confirmado) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int getCordX() {
+        return cordX;
+    }
+
+    public int getCordY() {
+        return cordY;
+    }
+
+    public void setConfirmado(boolean confirmado) {
+        this.confirmado = confirmado;
+    }
+
+    public void addConfirmarListener(ActionListener listener) {
+        confirmarButton.addActionListener(listener);
+    }
+}
+

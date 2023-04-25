@@ -1,0 +1,94 @@
+package upe.poli.games.GUI;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class CoordenadasGUI extends JFrame {
+    private JLabel orientacaoLabel;
+    private JRadioButton orientacaoHorizontal;
+    private JRadioButton orientacaoVertical;
+    private JTextField cordXField;
+    private JTextField cordYField;
+    private JButton confirmarButton;
+    private int cordX;
+    private int cordY;
+    private boolean orientacao;
+
+    public CoordenadasGUI() {
+        initComponents();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        setTitle("Posicionar navios");
+    }
+
+    private void initComponents() {
+        // Cria os componentes
+        orientacaoLabel = new JLabel("Orientação:");
+        orientacaoHorizontal = new JRadioButton("Horizontal");
+        orientacaoHorizontal.setSelected(true);
+        orientacaoVertical = new JRadioButton("Vertical");
+        cordXField = new JTextField();
+        cordYField = new JTextField();
+        confirmarButton = new JButton("Confirmar");
+
+        // Agrupa os botões de orientação
+        ButtonGroup orientacaoGroup = new ButtonGroup();
+        orientacaoGroup.add(orientacaoHorizontal);
+        orientacaoGroup.add(orientacaoVertical);
+
+        // Define o layout
+        setLayout(new GridLayout(3, 2));
+
+        // Adiciona os componentes ao frame
+        add(new JLabel("Coordenada X:"));
+        add(cordXField);
+        add(new JLabel("Coordenada Y:"));
+        add(cordYField);
+        add(orientacaoLabel);
+        JPanel orientacaoPanel = new JPanel(new GridLayout(1, 2));
+        orientacaoPanel.add(orientacaoHorizontal);
+        orientacaoPanel.add(orientacaoVertical);
+        add(orientacaoPanel);
+        add(confirmarButton);
+
+        // Define as ações dos botões
+        confirmarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cordX = Integer.parseInt(cordXField.getText());
+                cordY = Integer.parseInt(cordYField.getText());
+                orientacao = getOrientacaoVertical();
+                dispose();
+            }
+        });
+
+        // Define o tamanho do frame e o torna visível
+        setSize(300, 150);
+        setVisible(true);
+    }
+
+    public void exibir() {
+        setVisible(true);
+    }
+
+    public int getCordX() {
+        return cordX;
+    }
+
+    public int getCordY() {
+        return cordY;
+    }
+
+    public boolean getOrientacaoVertical() {
+        return orientacaoVertical.isSelected();
+    }
+
+    public boolean orientacaoVertical() {
+        return getOrientacaoVertical();
+    }
+}
+
+

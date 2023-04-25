@@ -1,0 +1,173 @@
+package upe.poli.games;
+
+import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import upe.poli.games.navios.NavioPersonalizado;
+
+public class GameCustom {
+
+    private Jogador[] jogadores;
+    private Navio[] naviosPersonalizados;
+    private Ranking ranking;
+
+    public GameCustom(Jogador[] jogadores) {
+        this.jogadores = jogadores;
+    }
+
+    //Método para personalizar os tipos e a quantidade de navios a serem colocados na grelha
+    public void personalizarNavios() {
+        String tiposString = JOptionPane.showInputDialog(null, "Quantos tipos de navio você deseja criar?");
+        int tipos = Integer.parseInt(tiposString);
+        Navio[] naviosPersonalizados = new Navio[tipos];
+
+        for (int i = 0; i < tipos; i++) {
+            String tipo = JOptionPane.showInputDialog(null, "Digite o nome do navio " + (i + 1) + ":");
+            String quantidadeString = JOptionPane.showInputDialog(null, "Digite a quantidade de navios deste tipo que poderão ser posicionados:");
+            int quantidade = Integer.parseInt(quantidadeString);
+            String tamanhoString = JOptionPane.showInputDialog(null, "Digite o tamanho dos navios deste tipo:");
+            int tamanho = Integer.parseInt(tamanhoString);
+
+            naviosPersonalizados[i] = new NavioPersonalizado(tipo, tamanho, quantidade);
+        }
+
+        this.naviosPersonalizados = naviosPersonalizados;
+    }
+    
+
+
+public void start() {
+        
+
+        for (Jogador jogador : jogadores) {
+            jogador.posicionarNaviosPersonalizados(naviosPersonalizados);
+        }
+
+        boolean gameOver = false;
+        Jogador jogador1 = jogadores[0];
+        Jogador jogador2 = jogadores[1];
+        
+        int turno = 1;
+
+        while (!gameOver) {
+        	turno++;
+        	
+        	
+        	Ranking ranking = new Ranking(jogadores);
+        	ranking.atualizar(jogadores, turno);
+        	ranking.exibirRankingJOptionPane();
+
+        	
+            jogador1.getJanelaJogo().setVisible(true);
+            jogador1.getJanelaJogo().setExtendedState(JFrame.NORMAL);
+
+            int x = -1, y = -1;
+            char z;
+
+            do {
+                z = JOptionPane.showInputDialog(null, "Escolha uma linha:").charAt(0);
+                y = Integer.parseInt(JOptionPane.showInputDialog(null, "Escolha uma coluna:")) - 1;
+                x = Character.toLowerCase(z) - (int) 'a';
+
+                if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 2) {
+                    JOptionPane.showMessageDialog(null, "Posição já acertada, escolha uma nova posição.");
+                } else if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 8) {
+                    JOptionPane.showMessageDialog(null, "Posição já acertada, escolha uma nova posição.");
+                }
+            } while (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 2 || jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 8);
+
+            if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 1) {
+                JOptionPane.showMessageDialog(null, "Acertou!");
+
+                jogador1.getAtaqueGUI().setTiro(jogador1.getGrelhaDeAtaque(), x, y, 1);
+
+                jogador2.getDefesaGUI().setTiro(jogador2.getGrelhaDeDefesa(), x, y, 8);
+
+                if (jogador2.getGrelhaDeDefesa().naviosDestruidos()) {
+                    JOptionPane.showMessageDialog(null, jogador1.getNome() + " Vitória!");
+                    gameOver = true;
+                }
+            } else if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 4) {
+                JOptionPane.showMessageDialog(null, "Acertou!");
+
+                jogador1.getAtaqueGUI().setTiro(jogador1.getGrelhaDeAtaque(), x, y, 4);
+
+                jogador2.getDefesaGUI().setTiro(jogador2.getGrelhaDeDefesa(), x, y, 8);
+
+                if (jogador2.getGrelhaDeDefesa().naviosDestruidos()) {
+                    JOptionPane.showMessageDialog(null, jogador1.getNome() + " Vitória!");
+                    gameOver = true;
+
+                }
+            } else if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 5) {
+                JOptionPane.showMessageDialog(null, "Acertou!");
+
+                jogador1.getAtaqueGUI().setTiro(jogador1.getGrelhaDeAtaque(), x, y, 5);
+
+                
+                //jogador2.getGrelhaDeDefesa().setAcerto(x, y);
+                jogador2.getDefesaGUI().setTiro(jogador2.getGrelhaDeDefesa(),x, y, 8);
+                
+                if (jogador2.getGrelhaDeDefesa().naviosDestruidos()) {
+                	JOptionPane.showMessageDialog(null, jogador1.getNome() + " Vitória!");
+                    gameOver = true;
+            	
+            }
+            	
+            }else if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 6) {
+            	JOptionPane.showMessageDialog(null, "Acertou!");
+            	
+            	//jogador1.getGrelhaDeAtaque().setAcerto(x,y);
+                jogador1.getAtaqueGUI().setTiro(jogador1.getGrelhaDeAtaque(),x, y, 6);
+                
+                //jogador2.getGrelhaDeDefesa().setAcerto(x, y);
+                jogador2.getDefesaGUI().setTiro(jogador2.getGrelhaDeDefesa(),x, y, 8);
+                
+                if (jogador2.getGrelhaDeDefesa().naviosDestruidos()) {
+                	JOptionPane.showMessageDialog(null, jogador1.getNome() + " Vitória!");
+                    gameOver = true;
+            	
+            }
+            	
+            }else if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 7) {
+            	JOptionPane.showMessageDialog(null, "Acertou!");
+            	//jogador1.getGrelhaDeAtaque().setAcerto(x,y);
+                jogador1.getAtaqueGUI().setTiro(jogador1.getGrelhaDeAtaque(),x, y, 7);
+                
+                //jogador2.getGrelhaDeDefesa().setAcerto(x, y);
+                jogador2.getDefesaGUI().setTiro(jogador2.getGrelhaDeDefesa(),x, y, 8);
+                
+                if (jogador2.getGrelhaDeDefesa().naviosDestruidos()) {
+                	jogador1.incrementarVitorias();
+                	JOptionPane.showMessageDialog(null, jogador1.getNome() + " Vitória!");
+                    gameOver = true;
+            	}
+            }
+                
+            
+            else {
+                //System.out.println("Errou!");
+                JOptionPane.showMessageDialog(null, "Errou!");
+                //jogador1.getGrelhaDeAtaque().setErro(x,y);
+                jogador1.getAtaqueGUI().setErrou(jogador1.getGrelhaDeAtaque(),x, y);
+                
+                //jogador2.getGrelhaDeDefesa().setErro(x,y); 
+                jogador2.getDefesaGUI().setErrou(jogador2.getGrelhaDeDefesa(),x, y);
+                
+            }
+            jogador1.getJanelaJogo().setVisible(false);
+
+
+            // troca os jogadores
+            Jogador atual = jogador1;
+            jogador1 = jogador2;
+            jogador2 = atual;
+        }
+        Ranking ranking = new Ranking(jogadores);
+     // atualizar ranking com os jogadores e número de turnos
+     ranking.exibirRankingJOptionPane();
+        
+    }
+}

@@ -1,0 +1,276 @@
+package upe.poli.games;
+
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Scanner;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+import upe.poli.games.GUI.JanelaJogo;
+import upe.poli.games.GUI.PosicionarNaviosGUI;
+import upe.poli.games.GUI.TabuleiroGUI;
+
+
+public class Jogador 
+{
+    private String nome;
+    private Tabuleiro grelhaDeDefesa;
+    private Tabuleiro grelhaDeAtaque;
+    private Navio[] navios;
+    private boolean[] naviosPosicionados;
+	private int size;
+	private TabuleiroGUI defesaGUI;
+	private TabuleiroGUI ataqueGUI;
+	private JanelaJogo janelaJogo;
+	private PosicionarNaviosGUI posicionarGUI;
+	
+	
+
+    public Jogador(String nome, int size, Navio[] navios) {
+        this.nome = nome;
+        this.size=size;
+        this.navios = navios; 
+        this.naviosPosicionados = new boolean[navios.length];
+        
+        this.grelhaDeDefesa = new Tabuleiro(size);
+        this.grelhaDeAtaque = new Tabuleiro(size);
+        this.posicionarGUI = new PosicionarNaviosGUI(size);
+        this.defesaGUI = new TabuleiroGUI(grelhaDeDefesa, nome, "Defesa");
+        this.ataqueGUI = new TabuleiroGUI(grelhaDeAtaque, nome, "Ataque");
+        this.janelaJogo = new JanelaJogo (defesaGUI, ataqueGUI, nome);
+        
+        posicionarGUI.setVisible(false);
+        defesaGUI.setVisible(false);
+        defesaGUI.atualizar();
+        ataqueGUI.setVisible(false);
+        ataqueGUI.atualizar();
+        janelaJogo.setVisible(false);
+      
+        
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public Tabuleiro getGrelhaDeDefesa() {
+        return grelhaDeDefesa;
+    }
+    public TabuleiroGUI getDefesaGUI() {
+        return defesaGUI;
+    }
+    public TabuleiroGUI getAtaqueGUI() {
+        return ataqueGUI;
+    }
+    public JanelaJogo getJanelaJogo() {
+        return janelaJogo;
+    }
+    
+    public Tabuleiro getGrelhaDeAtaque() {
+        return grelhaDeAtaque;
+    }
+    public PosicionarNaviosGUI getPosicionarGUI() {
+        return posicionarGUI;
+    }
+    
+
+    public Navio[] getNavios() {
+        return navios;
+    }
+    
+  
+
+
+    public void posicionarNavios() {
+        janelaJogo.setVisible(true);
+        for (int i2 = 0; i2 < navios.length; i2++) {
+            Navio navio = navios[i2];
+            while (!naviosPosicionados[i2]) {
+        JPanel tabuleiro = new JPanel(new GridLayout(grelhaDeDefesa.getSize(), grelhaDeDefesa.getSize()));
+        JButton[][] botoes = new JButton[grelhaDeDefesa.getSize()][grelhaDeDefesa.getSize()];
+        
+        for (int i = 0; i < grelhaDeDefesa.getSize(); i++) {
+            for (int j = 0; j < grelhaDeDefesa.getSize(); j++) {
+                JButton botao = new JButton();
+                botao.setPreferredSize(new Dimension(40, 40));
+                botao.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        int x = -1;
+                        int y = -1;
+                        for (int i = 0; i < grelhaDeDefesa.getSize(); i++) {
+                            for (int j = 0; j < grelhaDeDefesa.getSize(); j++) {
+                                if (e.getSource() == botoes[i][j]) {
+                                    x = i;
+                                    y = j;
+                                    break;
+                                }
+                            }
+                            if (x != -1 && y != -1) {
+                                break;
+                            }
+                        }
+                        if (x != -1 && y != -1) {
+                            boolean inputValido = false;
+                            boolean vertical = false;
+                            while (!inputValido) {
+                                String[] options = {"Sim", "Não"};
+                                int verticalInt = JOptionPane.showOptionDialog(null, "Vertical?", "Posicionar navio", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                if (verticalInt == -1) {
+                                    continue;
+                                }
+                                vertical = verticalInt == 0 ? true : false;
+                                if (verificarDisponibilidade(grelhaDeDefesa, x, y, navio.getTamanho(), vertical, navio.getTipo())) {
+                                    navio.colocarNoTabuleiro(grelhaDeDefesa, x, y, vertical);
+                                    defesaGUI.atualizar();
+                                    naviosPosicionados[i2] = true;
+                                    inputValido = true;
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Posição inválida, tente novamente.");
+                                }
+                            }
+                            tabuleiro.setVisible(false);
+                        }
+                    }
+                });
+                tabuleiro.add(botao);
+                botoes[i][j] = botao;
+            }
+        }
+        janelaJogo.add(tabuleiro, BorderLayout.CENTER);
+        janelaJogo.revalidate();
+        janelaJogo.repaint();
+    }
+}
+}
+
+  
+                    
+
+
+    public boolean verificarDisponibilidade(Tabuleiro grelhaDeDefesa, int x, int y, int tamanho, boolean isVertical, String tipo) {
+        if (isVertical) {
+            if (x + tamanho > grelhaDeDefesa.getSize()) { 
+            	// nao permite que o barco seja maior que o tabuleiro em x
+                return false;
+            }
+            
+            if (tipo.equals("Porta-Aviões")) { //"Porta-Aviões" possui regras de colocacao diferentes por conta de seu formato
+                if (y + 1 > grelhaDeDefesa.getSize()) { // nao permite que o "Porta-Aviões" passe do tabuleiro
+                    return false;
+                }
+                if (y - 1 < 0) { // nao permite que o "Porta-Aviões" passe do tabuleiro
+                    return false;
+                }
+            }
+            
+            
+            for (int i = x; i < x + tamanho; i++) { 
+                if (grelhaDeDefesa.getGrelha()[i][y] != 0) { // varre a coordenada x + tamanho do navio verificando se há outro posicionado lá dado y
+                    return false;
+                }
+            }
+        } else {
+            if (y + tamanho > grelhaDeDefesa.getSize()) { // nao permite que o barco seja maior que o tabuleiro em y
+                return false;
+            }
+            if (tipo.equals("Porta-Aviões")) { //"Porta-Aviões" possui regras de colocacao diferentes por conta de seu formato
+                if (x + 1 > grelhaDeDefesa.getSize()) { // nao permite que o "Porta-Aviões" passe do tabuleiro
+                    return false;
+                }
+                if (x - 1 < 0) { // nao permite que o "Porta-Aviões" passe do tabuleiro
+                    return false;
+                }
+           }
+            for (int i = y; i < y + tamanho; i++) {
+                if (grelhaDeDefesa.getGrelha()[x][i] != 0) { // varre a coordenada x + tamanho do navio verificando se há outro posicionado lá dado y
+                    return false;
+                }
+            }
+        }
+        return true;
+    } 
+    public boolean colocarNavio(Navio navioAtual, int x, int y) {
+        if (verificarDisponibilidade(grelhaDeDefesa, x, y, navioAtual.getTamanho(), true, navioAtual.getTipo())) {
+            return true;
+        } else if (verificarDisponibilidade(grelhaDeDefesa, x, y, navioAtual.getTamanho(), false, navioAtual.getTipo())) {
+        	return true;
+        } else {
+            System.out.println("Não foi possível posicionar o navio nesta posição.");
+            return false;
+        }
+    }
+
+    public void posicionarNaviosPersonalizados(Navio[] naviosPersonalizados) {
+    	 janelaJogo.setVisible(true);
+        Scanner scanner = new Scanner(System.in);
+        for (int i = 0; i < naviosPersonalizados.length; i++) {
+            Navio navioPersonalizado = naviosPersonalizados[i];
+            if (!naviosPosicionados[i]) {
+                boolean inputValido = false;
+                int x = 0;
+                int y = 0;
+                boolean vertical = false;
+                while (!inputValido) {
+                    //grelhaDeDefesa.printTabuleiro();
+                    System.out.println("Insira a posição inicial para o navio " + navioPersonalizado.getTipo() + " (tamanho: " + navioPersonalizado.getTamanho() + ")");
+                    
+                    System.out.print("Linha: ");
+                    String linhaStr = scanner.next();
+                    if (linhaStr.matches("[a-zA-Z]")) {
+                        char linhaChar = Character.toLowerCase(linhaStr.charAt(0));
+                        x = linhaChar - 'a';
+                        if (x < 0 || x >= grelhaDeDefesa.getSize()) {
+                            System.out.println("Posição inválida, tente novamente.");
+                            continue;
+                        }
+                    } else {
+                        System.out.println("Posição inválida, tente novamente.");
+                        continue;
+                    }
+                    
+                    System.out.print("Coluna: ");
+                    if (scanner.hasNextInt()) {
+                        y = scanner.nextInt();
+                        if (y < 0 || y >= grelhaDeDefesa.getSize()) {
+                            System.out.println("Posição inválida, tente novamente.");
+                            continue;
+                        }
+                    } else {
+                        System.out.println("Posição inválida, tente novamente.");
+                        continue;
+                    }
+                    
+                    System.out.print("Vertical? (true/false): ");
+                    if (scanner.hasNextBoolean()) {
+                        vertical = scanner.nextBoolean();
+                    } else {
+                        System.out.println("Posição inválida, tente novamente.");
+                        continue;
+                    }
+                    
+                    if (verificarDisponibilidade(grelhaDeDefesa, x, y, navioPersonalizado.getTamanho(), vertical, navioPersonalizado.getTipo())) {
+                    	navioPersonalizado.colocarNoTabuleiro(grelhaDeDefesa, x, y, vertical);
+                    	defesaGUI.atualizar();
+                        naviosPosicionados[i] = true;
+                        inputValido = true;
+                    } else {
+                        System.out.println("Posição inválida, tente novamente.");
+                    }
+                }
+            }
+        }
+        janelaJogo.setVisible(false);
+    }
+
+	public int getSize() {
+		return size;
+	}
+}
+

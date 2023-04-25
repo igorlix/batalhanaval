@@ -1,0 +1,164 @@
+package upe.poli.games.GUI;
+
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+
+import upe.poli.games.Jogador;
+import upe.poli.games.Tabuleiro;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class TabuleiroGUI extends JFrame {
+
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private Tabuleiro tabuleiro;
+    private JButton[][] botoes;
+	private String nome;
+	private String tipoDeTabuleiro;
+    private JButton botaoPosicionar;
+
+   
+
+        public TabuleiroGUI(Tabuleiro tabuleiro, String nome, String tipoDeTabuleiro) {
+            this.tabuleiro = tabuleiro;
+            this.nome = nome;
+            this.tipoDeTabuleiro = tipoDeTabuleiro;
+            this.botoes = new JButton[tabuleiro.getSize()][tabuleiro.getSize()];
+
+            setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            setTitle("Grelha de: " + tipoDeTabuleiro + " " + nome);
+
+            JPanel painelPrincipal = new JPanel(new GridLayout(tabuleiro.getSize() + 2, tabuleiro.getSize() + 1));
+
+            // Cria os botões das colunas
+            painelPrincipal.add(new JLabel(""));
+            for (int i = 0; i < tabuleiro.getSize(); i++) {
+                painelPrincipal.add(new JLabel(String.valueOf(i + 1), SwingConstants.CENTER));
+            }
+
+            // Cria os botões das linhas e da grelha
+            for (int i = 0; i < tabuleiro.getSize(); i++) {
+                painelPrincipal.add(new JLabel(String.valueOf((char) ('A' + i)), SwingConstants.CENTER));
+                for (int j = 0; j < tabuleiro.getSize(); j++) {
+                    JButton botao = new JButton("~");
+                    botao.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JButton clickedButton = (JButton) e.getSource();
+                            int x = -1;
+                            int y = -1;
+                            for (int i = 0; i < botoes.length; i++) {
+                                for (int j = 0; j < botoes[i].length; j++) {
+                                    if (clickedButton == botoes[i][j]) {
+                                        x = i;
+                                        y = j;
+                                        break;
+                                    }
+                                }
+                                if (x != -1) {
+                                    break;
+                                }
+                            }
+                            // Use x e y para posicionar o tabuleiro
+                        }
+                    });
+
+                    
+                    botao.setBackground(Color.BLUE);// Define o texto inicial do botão como "~"
+                    botao.setPreferredSize(new Dimension(50, 50));
+                    botoes[i][j] = botao;
+                    painelPrincipal.add(botao);
+                    botao.setSelected(false);
+                }
+            }
+            
+
+            JPanel painelBotoes = new JPanel(new FlowLayout());
+            
+            
+          
+
+            add(painelPrincipal, BorderLayout.CENTER);
+            add(painelBotoes, BorderLayout.SOUTH);
+
+            pack();
+            setVisible(false);
+        }
+        
+        
+	public void atualizar() {
+        int[][] grelha = tabuleiro.getGrelha();
+        for (int i = 0; i < tabuleiro.getSize(); i++) {
+            for (int j = 0; j < tabuleiro.getSize(); j++) {
+            	JButton botao = botoes[i][j];
+                if (grelha[i][j] == 0) { // indica um espaco vazio (mar)
+                    botao.setText("~");
+                    botao.setBackground(Color.BLUE);
+                } else if (grelha[i][j] == 1) { // indica um navio
+                	botao.setText("O");
+                	botao.setBackground(Color.GRAY);
+                } else if (grelha[i][j] == 2) { // indica um navio acertado
+                	botao.setText("X");
+                	botao.setBackground(Color.GREEN);
+                } else if (grelha[i][j] == 3) { // indica uma posicao vazia acertada
+                	botao.setText(".");
+                	botao.setBackground(Color.RED);
+                } else if (grelha[i][j] == 4) { // indica um porta aviões
+                	botao.setText("O");
+                	botao.setBackground(Color.DARK_GRAY); 
+                } else if (grelha[i][j] == 5) { // Encouracado
+                	botao.setText("#");
+                	botao.setBackground(new Color(192, 192, 192)); 
+                } else if (grelha[i][j] == 6) { // Contratorpedeiro
+                	botao.setText("@");
+                	botao.setBackground(new Color(192, 192, 192)); 
+                } else if (grelha[i][j] == 7) { // Submarino   
+                	botao.setText("*");
+                	botao.setBackground(new Color(220, 220, 220)); 
+                } else if (grelha[i][j] == 8) { // navio do jogador atual atacado   
+                	botao.setText("!");
+                	botao.setBackground(new Color(255, 165, 0)); 
+                } 
+            }
+        }
+    }
+	
+
+	
+
+    public void setTiro(Tabuleiro tabuleiro, int x, int y, int tipo) {
+        
+        if(tipo == 1) {
+        	tabuleiro.setAcerto(x, y, 1);
+            atualizar();
+        }else if (tipo == 8) {
+            tabuleiro.setAcerto(x, y, 8);
+            atualizar();
+        } else if (tipo == 4) {
+        	tabuleiro.setAcerto(x, y, 4);
+            atualizar();
+        }else if (tipo == 5) {
+        	tabuleiro.setAcerto(x, y, 5);
+            atualizar();
+        }else if (tipo == 6) {
+        	tabuleiro.setAcerto(x, y, 6);
+            atualizar();
+        }else if (tipo == 7) {
+        	tabuleiro.setAcerto(x, y, 7);
+            atualizar();
+        }
+
+    }
+
+    public void setErrou(Tabuleiro tabuleiro, int x, int y) {
+        tabuleiro.setErro(x, y);
+        botoes[x][y].setText(".");
+        atualizar();
+    }
+
+}

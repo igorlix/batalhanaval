@@ -1,0 +1,95 @@
+package upe.poli.games.GUI;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+public class PosicionarNaviosGUI extends JFrame {
+	private JTextField xTextField;
+	private JTextField yTextField;
+	private JCheckBox verticalCheckBox;
+	private JLabel erroLabel;
+
+	private int x;
+	private int y;
+	private boolean vertical;
+	private int size;
+
+	public PosicionarNaviosGUI(int size) {
+	    super("Posicionar Navio");
+	    setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    setResizable(false);
+
+	    this.size = size;
+
+	    // Configurar layout
+	    JPanel contentPane = new JPanel();
+	    contentPane.setLayout(new GridLayout(0, 2, 10, 10));
+	    setContentPane(contentPane);
+
+	    // Adicionar campos de entrada de dados
+	    contentPane.add(new JLabel("Linha (Letras):"));
+	    xTextField = new JTextField(10);
+	    contentPane.add(xTextField);
+
+	    contentPane.add(new JLabel("Coluna (Numeros):"));
+	    yTextField = new JTextField(10);
+	    contentPane.add(yTextField);
+
+	    contentPane.add(new JLabel("Vertical?"));
+	    verticalCheckBox = new JCheckBox();
+	    contentPane.add(verticalCheckBox);
+
+	    // Adicionar botão OK
+	    JButton okButton = new JButton("OK");
+	    okButton.addActionListener(new ActionListener() {
+	        @Override
+	        public void actionPerformed(ActionEvent e) {
+	            // Obter valores dos campos de entrada
+	            String xStr = xTextField.getText().toLowerCase();
+	            char xChar = xStr.charAt(0);
+	            x = xChar - 'a';
+	            y = Integer.parseInt(yTextField.getText());
+	            vertical = verticalCheckBox.isSelected();
+
+	            // Verificar se os valores são válidos
+	            if (x < 0 || x >= size || y < 0 || y >= size) {
+	                exibirMensagemDeErro("Posição inválida, tente novamente.");
+	            } else {
+	                // Fechar janela
+	                dispose();
+	            }
+	        }
+	    });
+	    contentPane.add(okButton);
+
+	    // Adicionar label de erro
+	    erroLabel = new JLabel();
+	    erroLabel.setForeground(Color.RED);
+	    contentPane.add(erroLabel);
+
+	    // Finalizar configuração da janela
+	    pack();
+	    setLocationRelativeTo(null);
+	}
+
+	public int getX() {
+	    return x;
+	}
+
+	public int getY() {
+	    return y;
+	}
+
+	public boolean isVertical() {
+	    return vertical;
+	}
+	public void exibir() {
+        setVisible(true);
+    }
+
+	public void exibirMensagemDeErro(String mensagem) {
+	    erroLabel.setText(mensagem);
+	}
+}

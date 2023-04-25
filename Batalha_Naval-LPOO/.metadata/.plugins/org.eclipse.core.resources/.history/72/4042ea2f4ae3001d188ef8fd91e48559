@@ -1,0 +1,6 @@
+package upe.poli.games;
+
+public class Ranking {
+    private Map<String, Integer> vitorias = new HashMap<>();
+    private Map<String, Integer> turnos = new HashMap<>();
+}

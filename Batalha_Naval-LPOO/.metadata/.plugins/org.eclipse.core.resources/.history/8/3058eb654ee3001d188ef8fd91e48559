@@ -1,0 +1,49 @@
+package upe.poli.games;
+
+
+import upe.poli.games.GUI.TelaConfigGUI;
+import upe.poli.games.GUI.TelaDeInicio;
+import upe.poli.games.excecoes.TamanhoTabuleiroInvalidoException;
+import upe.poli.games.navios.Contratorpedeiro;
+import upe.poli.games.navios.Encouracado;
+import upe.poli.games.navios.PortaAvioes;
+import upe.poli.games.navios.Submarino;
+
+
+public class Main {
+    public static void main(String[] args) throws TamanhoTabuleiroInvalidoException {
+    	
+       
+
+        TelaConfigGUI configs = new TelaConfigGUI(); 
+        configs.setVisible(false);
+        
+
+
+        String nomeJogador1 = configs.getNome1();
+        String nomeJogador2 = configs.getNome2();
+        int size = configs.getTamanho();
+        boolean modoClassico = configs.getModo();
+
+        Navio[] navios = new Navio[4];
+        navios[0] = new PortaAvioes("Porta-Aviões", 3);
+        navios[1] = new Encouracado("Encouraçado", 4);
+        navios[2] = new Contratorpedeiro("Contratorpedeiro", 3);
+        navios[3] = new Submarino("Submarino", 2);
+
+        System.out.println("Bem-vindo ao jogo Batalha Naval");
+
+        Jogador[] jogadores = new Jogador[2];
+        jogadores[0] = new Jogador(nomeJogador1, size, navios);
+        jogadores[1] = new Jogador(nomeJogador2, size, navios);
+
+        if (modoClassico) {
+            Game game = new Game(jogadores, size);
+            game.start();
+        } else {
+            GameCustom gameCustom = new GameCustom(jogadores);
+            gameCustom.personalizarNavios();
+            gameCustom.start();
+        }
+    }
+}

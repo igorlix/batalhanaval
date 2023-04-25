@@ -1,0 +1,109 @@
+package upe.poli.games.GUI;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+
+import upe.poli.games.Main;
+
+public class JanelaJogo extends JFrame {
+	
+	private String nome;
+	private TabuleiroGUI ataque;
+	private TabuleiroGUI defesa;
+	private JLabel statusLabel;
+
+	public JanelaJogo(TabuleiroGUI ataque, TabuleiroGUI defesa, String nome) {
+		this.nome = nome;
+		this.ataque = ataque;
+		this.defesa = defesa;
+		
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Batalha Naval - Tabuleiro do Jogado: " + nome);
+		
+		// Criando os componentes da janela
+		JMenuBar menuBar = criarMenu();
+		JPanel tabuleirosPanel = criarTabuleirosPanel();
+		statusLabel = criarStatusLabel();
+		
+		// Adicionando os componentes à janela
+		setJMenuBar(menuBar);
+		add(tabuleirosPanel, BorderLayout.CENTER);
+		add(statusLabel, BorderLayout.SOUTH);
+
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+        setVisible(true);
+		
+	}
+
+	// Cria o menu de opções da janela
+	private JMenuBar criarMenu() {
+		JMenuBar menuBar = new JMenuBar();
+		
+		JMenu jogoMenu = new JMenu("Menu");
+		JMenuItem novoJogoItem = new JMenuItem("Novo Jogo");
+		JMenuItem sairItem = new JMenuItem("Sair");
+		jogoMenu.add(novoJogoItem);
+		jogoMenu.addSeparator();
+		jogoMenu.add(sairItem);
+		
+		novoJogoItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		
+		sairItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+		
+		menuBar.add(jogoMenu);
+		
+		return menuBar;
+	}
+
+	// Cria o painel com os tabuleiros de ataque e defesa
+	private JPanel criarTabuleirosPanel() {
+	    JPanel tabuleirosPanel = new JPanel(new GridLayout(1, 2));
+	    
+	    
+	    tabuleirosPanel.add(ataque.getContentPane());
+	    tabuleirosPanel.add(defesa.getContentPane());
+	    
+	    setSize(600, 400);
+	    setResizable(true);
+	    
+	    return tabuleirosPanel;
+	}
+	
+	// Cria a barra de status da janela
+	private JLabel criarStatusLabel() {
+		JLabel statusLabel = new JLabel("Bem-vindo à Batalha Naval! Clique em uma posição para atacar.", SwingConstants.CENTER);
+		statusLabel.setPreferredSize(new Dimension(getWidth(), 25));
+		statusLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+		return statusLabel;
+		}
+	// Atualiza a mensagem da barra de status
+	public void atualizarStatus(String mensagem) {
+		statusLabel.setText(mensagem);
+	}
+}

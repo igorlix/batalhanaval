@@ -1,0 +1,4 @@
+INDEX VERSION 1.131+C:\Users\igorl\OneDrive\Documentos\Jogo\batalhanaval\Batalha_Naval-LPOO\ratrw3tAWET\.metadata\.plugins\org.eclipse.jdt.core
+1092656135.index
+2472831355.index
+1865797976.index

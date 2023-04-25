@@ -1,7 +1,7 @@
 package upe.poli.games;
 import java.util.Scanner;
 
-import upe.poli.games.excessoes.EntradaInvalidaExcecao;
+import upe.poli.games.excecoes.EntradaInvalidaExcecao;
 import upe.poli.games.navios.Contratorpedeiro;
 import upe.poli.games.navios.Encouracado;
 import upe.poli.games.navios.PortaAvioes;

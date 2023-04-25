@@ -1,0 +1,32 @@
+package upe.poli.games.navios;
+
+import upe.poli.games.Navio;
+import upe.poli.games.Tabuleiro;
+
+public class NavioPersonalizado extends Navio {
+	private int quantidade;
+
+	public NavioPersonalizado(String tipo, int tamanho, int quantidade) {
+	    super(tipo, tamanho);
+	    this.quantidade = quantidade;
+	}
+
+	public int getQuantidade() {
+	    return quantidade;
+	}
+
+	public void setQuantidade(int quantidade) {
+	    this.quantidade = quantidade;
+	}
+
+    public void colocarNoTabuleiro(Tabuleiro tabuleiro, int x, int y, boolean isVertical) {
+        int tamanho = getTamanho();
+        for (int i = 0; i < tamanho; i++) {
+            if (isVertical) {
+                tabuleiro.getGrelha()[x + i][y] = 1;
+            } else {
+                tabuleiro.getGrelha()[x][y + i] = 1;
+            }
+        }	
+	}
+}

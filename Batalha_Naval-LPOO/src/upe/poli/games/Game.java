@@ -40,7 +40,8 @@ public class Game {
                 z = scanner.next().charAt(0);
                 System.out.print("Escolha uma coluna: ");
                 y = scanner.nextInt();
-                x = Character.toLowerCase(z)-(int) 'a'; // 
+                x = Character.toLowerCase(z)-(int) 'a'; 
+                
                 if (jogador2.getGrelhaDeDefesa().getGrelha()[x][y] == 2) {
                     System.out.println("Posição já acertada, escolha uma nova posição.");
                 }

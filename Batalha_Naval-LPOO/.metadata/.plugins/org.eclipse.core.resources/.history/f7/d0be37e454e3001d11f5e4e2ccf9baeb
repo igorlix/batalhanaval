@@ -1,0 +1,160 @@
+package upe.poli.games.GUI;
+
+import javax.swing.*;
+
+import upe.poli.games.Game;
+import upe.poli.games.GameCustom;
+import upe.poli.games.Jogador;
+import upe.poli.games.Main;
+import upe.poli.games.Navio;
+import upe.poli.games.excecoes.TamanhoTabuleiroInvalidoException;
+import upe.poli.games.navios.Contratorpedeiro;
+import upe.poli.games.navios.Encouracado;
+import upe.poli.games.navios.PortaAvioes;
+import upe.poli.games.navios.Submarino;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+    
+public class TelaConfigGUI extends JDialog {
+
+    private JLabel labelNome1, labelNome2, labelTamanho, labelModo;
+    private JTextField fieldNome1, fieldNome2, fieldTamanho;
+    private JRadioButton radioClassico, radioCustom;
+    private JButton buttonOk;
+    private String nome1, nome2;
+    private int tamanho;
+    private boolean modo;
+
+    public TelaConfigGUI(JFrame parent) {
+        super(parent, "Configurações", true);
+        setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        setSize(500, 400);
+        setResizable(false);
+        setLocationRelativeTo(null);
+
+        JPanel painel = new JPanel();
+        painel.setLayout(null);
+        painel.setBackground(new Color(173, 216, 230));
+
+        JLabel labelTitulo = new JLabel("Batalha Naval");
+        labelTitulo.setFont(new Font("Impact", Font.BOLD, 36));
+        int tituloWidth = 300;
+        int tituloHeight = 30;
+        int tituloX = (getWidth() - tituloWidth) / 2;
+        int tituloY = 30;
+        labelTitulo.setBounds(tituloX, tituloY, tituloWidth, tituloHeight);
+        painel.add(labelTitulo);
+
+
+        JLabel labelNomeJogador1 = new JLabel("Nome do jogador 1:");
+        labelNomeJogador1.setBounds(50, 80, 120, 20);
+        painel.add(labelNomeJogador1);
+
+        fieldNome1 = new JTextField();
+        fieldNome1.setBounds(200, 80, 200, 20);
+        painel.add(fieldNome1);
+
+        JLabel labelNomeJogador2 = new JLabel("Nome do jogador 2:");
+        labelNomeJogador2.setBounds(50, 120, 120, 20);
+        painel.add(labelNomeJogador2);
+
+        fieldNome2 = new JTextField();
+        fieldNome2.setBounds(200, 120, 200, 20);
+        painel.add(fieldNome2);
+
+        JLabel labelTamanhoTabuleiro = new JLabel("Tamanho do tabuleiro (5-10):");
+        labelTamanhoTabuleiro.setBounds(50, 160, 180, 20);
+        painel.add(labelTamanhoTabuleiro);
+
+        fieldTamanho = new JTextField();
+        fieldTamanho.setBounds(240, 160, 50, 20);
+        painel.add(fieldTamanho);
+
+        JLabel labelModo = new JLabel("Modo de jogo:");
+        labelModo.setBounds(50, 200, 120, 20);
+        painel.add(labelModo);
+
+        radioClassico = new JRadioButton("Custom", false);
+        radioClassico.setBounds(200, 200, 80, 20);
+        painel.add(radioClassico);
+
+        radioCustom = new JRadioButton("Clássico", true);
+        radioCustom.setBounds(300, 200, 80, 20);
+        painel.add(radioCustom);
+
+        ButtonGroup radioGroup = new ButtonGroup();
+        radioGroup.add(radioClassico);
+        radioGroup.add(radioCustom);
+
+        buttonOk = new JButton("OK");
+        buttonOk.setBounds(200, 250, 100, 30);
+        painel.add(buttonOk);
+
+        buttonOk.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+
+                    if (fieldNome1.getText().isEmpty() || fieldNome2.getText().isEmpty() || fieldTamanho.getText().isEmpty() || (!radioClassico.isSelected() && !radioCustom.isSelected())) {
+                        JOptionPane.showMessageDialog(null, "Preencha todos os campos e selecione um modo de jogo.", "Erro", JOptionPane.ERROR_MESSAGE);
+                    } else {
+
+                    	nome1 = fieldNome1.getText();
+                    	nome2 = fieldNome2.getText();
+                    	tamanho = Integer.parseInt(fieldTamanho.getText());
+                    	modo = radioCustom.isSelected();
+
+                        if (tamanho < 5 || tamanho > 10) {
+                            JOptionPane.showMessageDialog(null, "O tamanho do tabuleiro deve estar entre 5 e 10.", "Erro", JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            dispose();
+                        }
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "O tamanho do tabuleiro deve ser um número inteiro entre 5 e 10.", "Erro", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        getContentPane().add(painel);
+
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos e selecione um modo de jogo.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        getRootPane().setDefaultButton(buttonOk);
+
+        setVisible(false);
+    }
+
+
+
+	public String getNome1() {
+        return nome1;
+    }
+
+    public String getNome2() {
+        return nome2;
+    }
+
+    public int getTamanho() {
+        return tamanho;
+    }
+    public boolean getModo() {
+        return modo;
+    }
+
+}
